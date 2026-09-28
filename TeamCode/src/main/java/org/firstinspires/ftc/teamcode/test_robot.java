@@ -46,17 +46,17 @@ public test_robot(HardwareMap hardwareMap){
 
     public void driveLeft(double power){
         // STRAFE LEFT
-        fl.setPower(-0.4);
-        bl.setPower(0.4);
-        fr.setPower(0.4);
-        br.setPower(-0.4);
+        fl.setPower(-power);
+        bl.setPower(power);
+        fr.setPower(power);
+        br.setPower(-power);
     }
     public void driveRight(double power){
         // STRAFE RIGHT
-        fl.setPower(0.4);
-        bl.setPower(-0.4);
-        fr.setPower(-0.4);
-        br.setPower(0.4);
+        fl.setPower(power);
+        bl.setPower(-power);
+        fr.setPower(-power);
+        br.setPower(power);
     }
 
    public void driveRobot(double drive,double strafe,double turn){

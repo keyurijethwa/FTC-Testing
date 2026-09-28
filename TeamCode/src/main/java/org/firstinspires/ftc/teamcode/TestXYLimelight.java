@@ -120,17 +120,16 @@ public class TestXYLimelight extends LinearOpMode {
             // ==========================================
 
             if (horizontalAngle > 2.0) {
-                tr.driveRight(0.2);
+                tr.driveRight(0.6);
                 telemetry.addLine("→ STRAFE RIGHT");
 
             } else if (horizontalAngle < -2.0) {
-                tr.driveLeft(0.2);
+                tr.driveLeft(0.6);
                 telemetry.addLine("← STRAFE LEFT");
 
             } else {
                 tr.stopDrive();
                 telemetry.addLine("✓ CENTERED - STOP");
-
             }
 
             telemetry.update();

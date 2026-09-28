@@ -30,6 +30,7 @@ public class LimelightCenter24inch extends LinearOpMode {
     //0 center
     //1 forward
     private static int STATE_MANAGE=0;
+    private static int PRESSED=0;
 
     // Allowed distance error
     private static final double DISTANCE_TOLERANCE = 0.5;
@@ -334,152 +335,158 @@ public class LimelightCenter24inch extends LinearOpMode {
 //
 // ==========================================
 
-            switch (STATE_MANAGE) {
+            if(gamepad1.a){
+                PRESSED=1;
+            }
+            if(PRESSED==1){
+                switch (STATE_MANAGE) {
 
-                // ==========================================
-                // STATE 0
-                // CENTER APRILTAG
-                // ==========================================
+                    // ==========================================
+                    // STATE 0
+                    // CENTER APRILTAG
+                    // ==========================================
 
-                case 0:
-
-                    telemetry.addLine(
-                            "STATE: CENTERING"
-                    );
-
-                    if (horizontalAngle > ANGLE_TOLERANCE) {
-
-                        // Tag is on right
-                        tr.driveRight(0.2);
+                    case 0:
 
                         telemetry.addLine(
-                                "→ STRAFING RIGHT"
+                                "STATE: CENTERING"
                         );
 
-                    } else if (horizontalAngle < -ANGLE_TOLERANCE) {
+                        if (horizontalAngle > ANGLE_TOLERANCE) {
 
-                        // Tag is on left
-                        tr.driveLeft(0.2);
+                            // Tag is on right
+                            tr.driveRight(0.3);
+
+                            telemetry.addLine(
+                                    "→ STRAFING RIGHT"
+                            );
+
+                        } else if (horizontalAngle < -ANGLE_TOLERANCE) {
+
+                            // Tag is on left
+                            tr.driveLeft(0.3);
+
+                            telemetry.addLine(
+                                    "← STRAFING LEFT"
+                            );
+
+                        } else {
+
+                            // ==================================
+                            // CENTERED
+                            // STOP STRAFE
+                            // ==================================
+
+                            tr.stopDrive();
+
+                            telemetry.addLine(
+                                    "✓ CENTERED"
+                            );
+
+                            // Move to forward state
+                            STATE_MANAGE = 1;
+
+                            telemetry.addLine(
+                                    "→ SWITCHING TO FORWARD"
+                            );
+                        }
+
+                        break;
+
+
+                    // ==========================================
+                    // STATE 1
+                    // MOVE TO TARGET DISTANCE
+                    // ==========================================
+
+                    case 1:
 
                         telemetry.addLine(
-                                "← STRAFING LEFT"
+                                "STATE: FORWARD"
                         );
 
-                    } else {
+                        // ======================================
+                        // TOO FAR
+                        // ======================================
 
-                        // ==================================
-                        // CENTERED
-                        // STOP STRAFE
-                        // ==================================
+                        if (calibratedDistanceInches >
+                                TARGET_DISTANCE_INCH + DISTANCE_TOLERANCE) {
+
+                            tr.drive(0.3);
+
+                            telemetry.addLine(
+                                    "↑ MOVING FORWARD"
+                            );
+
+                        }
+
+                        // ======================================
+                        // TOO CLOSE
+                        // ======================================
+
+                        else if (calibratedDistanceInches <
+                                TARGET_DISTANCE_INCH - DISTANCE_TOLERANCE) {
+
+                            tr.drive(-0.3);
+
+                            telemetry.addLine(
+                                    "↓ MOVING BACKWARD"
+                            );
+
+                        }
+
+                        // ======================================
+                        // TARGET DISTANCE REACHED
+                        // ======================================
+
+                        else {
+
+                            tr.stopDrive();
+
+                            telemetry.addLine(
+                                    "✓ 30 INCHES REACHED"
+                            );
+
+                            // Move to DONE state
+                            STATE_MANAGE = 2;
+
+                            telemetry.addLine(
+                                    "→ PROCESS COMPLETE"
+                            );
+                        }
+
+                        break;
+
+
+                    // ==========================================
+                    // STATE 2
+                    // DONE
+                    // ==========================================
+
+                    case 2:
 
                         tr.stopDrive();
+                        PRESSED=0;
+                        telemetry.addLine(
+                                "STATE: DONE"
+                        );
 
                         telemetry.addLine(
                                 "✓ CENTERED"
                         );
 
-                        // Move to forward state
-                        STATE_MANAGE = 1;
-
                         telemetry.addLine(
-                                "→ SWITCHING TO FORWARD"
-                        );
-                    }
-
-                    break;
-
-
-                // ==========================================
-                // STATE 1
-                // MOVE TO TARGET DISTANCE
-                // ==========================================
-
-                case 1:
-
-                    telemetry.addLine(
-                            "STATE: FORWARD"
-                    );
-
-                    // ======================================
-                    // TOO FAR
-                    // ======================================
-
-                    if (calibratedDistanceInches >
-                            TARGET_DISTANCE_INCH + DISTANCE_TOLERANCE) {
-
-                        tr.drive(0.3);
-
-                        telemetry.addLine(
-                                "↑ MOVING FORWARD"
+                                "✓ 30 INCHES"
                         );
 
-                    }
-
-                    // ======================================
-                    // TOO CLOSE
-                    // ======================================
-
-                    else if (calibratedDistanceInches <
-                            TARGET_DISTANCE_INCH - DISTANCE_TOLERANCE) {
-
-                        tr.drive(-0.3);
-
                         telemetry.addLine(
-                                "↓ MOVING BACKWARD"
+                                "✓ ROBOT STOPPED"
                         );
 
-                    }
-
-                    // ======================================
-                    // TARGET DISTANCE REACHED
-                    // ======================================
-
-                    else {
-
-                        tr.stopDrive();
-
-                        telemetry.addLine(
-                                "✓ 30 INCHES REACHED"
-                        );
-
-                        // Move to DONE state
-                        STATE_MANAGE = 2;
-
-                        telemetry.addLine(
-                                "→ PROCESS COMPLETE"
-                        );
-                    }
-
-                    break;
-
-
-                // ==========================================
-                // STATE 2
-                // DONE
-                // ==========================================
-
-                case 2:
-
-                    tr.stopDrive();
-
-                    telemetry.addLine(
-                            "STATE: DONE"
-                    );
-
-                    telemetry.addLine(
-                            "✓ CENTERED"
-                    );
-
-                    telemetry.addLine(
-                            "✓ 30 INCHES"
-                    );
-
-                    telemetry.addLine(
-                            "✓ ROBOT STOPPED"
-                    );
-
-                    break;
+                        break;
+                }
             }
+
         }
 
         // ==========================================
