@@ -101,7 +101,11 @@ public class Main extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-
+            tr.driveRobot(
+                    -gamepad1.left_stick_y * drive_power,
+                    gamepad1.left_stick_x * drive_power,
+                    -gamepad1.right_stick_x * drive_power
+            );
 
             // Limelight
 
@@ -198,27 +202,23 @@ public class Main extends LinearOpMode {
             if(gamepad1.dpad_left){
                 PRESSED=true;
             }
-            if (PRESSED){
-                if (horizontalAngle > 2.0) {
-                    tr.driveRight(0.6);
-                    telemetry.addLine("→ STRAFE RIGHT");
-
-                } else if (horizontalAngle < -2.0) {
-                    tr.driveLeft(0.6);
-                    telemetry.addLine("← STRAFE LEFT");
-
-                } else {
-                    tr.stopDrive();
-                    PRESSED=false;
-                    telemetry.addLine("✓ CENTERED - STOP");
-                }
-            }else {
-                tr.driveRobot(
-                        -gamepad1.left_stick_y * drive_power,
-                        gamepad1.left_stick_x * drive_power,
-                        -gamepad1.right_stick_x * drive_power
-                );
-            }
+//            if (PRESSED){
+//                if (horizontalAngle > 2.0) {
+//                    tr.driveRight(0.6);
+//                    telemetry.addLine("→ STRAFE RIGHT");
+//
+//                } else if (horizontalAngle < -2.0) {
+//                    tr.driveLeft(0.6);
+//                    telemetry.addLine("← STRAFE LEFT");
+//
+//                } else {
+//                    tr.stopDrive();
+//                    PRESSED=false;
+//                    telemetry.addLine("✓ CENTERED - STOP");
+//                }
+//            }else {
+//
+//            }
 
 
             if(gamepad1.left_bumper){

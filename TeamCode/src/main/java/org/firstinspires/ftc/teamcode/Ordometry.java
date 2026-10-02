@@ -12,6 +12,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 public class Ordometry extends OpMode {
 
     GoBildaPinpointDriver pinpoint;
+    double TARGET_Y=24.0;
+    double Y_OFFSET=3.20;
+    test_robot tr;
+
     @Override
     public void init() {
         pinpoint=hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
@@ -23,6 +27,7 @@ public class Ordometry extends OpMode {
 
     @Override
     public void loop() {
+        tr=new test_robot(hardwareMap);
         telemetry.addLine("Push your robot around to see it track");
         telemetry.addLine("Press A to reset the position");
         if(gamepad1.a){
@@ -31,6 +36,16 @@ public class Ordometry extends OpMode {
         }
         pinpoint.update();
         Pose2D pose2D = pinpoint.getPosition();
+        double x = pose2D.getX(DistanceUnit.INCH);
+        double y = pose2D.getY(DistanceUnit.INCH);
+
+        // Drive until Y reaches 24 inches
+        if (y < TARGET_Y-Y_OFFSET) {
+            tr.drive(0.4);
+        } else {
+            tr.drive(0);
+        }
+
 
         telemetry.addData("X coordinate (IN)", pose2D.getX(DistanceUnit.INCH));
         telemetry.addData("Y coordinate (IN)", pose2D.getY(DistanceUnit.INCH));
