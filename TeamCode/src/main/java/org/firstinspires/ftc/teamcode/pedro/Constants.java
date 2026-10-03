@@ -26,10 +26,10 @@ public class Constants {
             c -> {
                 c.name.set("pinpoint");
                 c.podType.set(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-                c.xPodOffset.set(0.0);
-                c.yPodOffset.set(0.0);
+                c.xPodOffset.set(1.1088921704630212);
+                c.yPodOffset.set(0.5617631326510212);
                 c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
-                c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+                c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.REVERSED);
                 c.globalDistanceUnit.set(DistanceUnit.INCH);
                 c.offsetUnits.set(DistanceUnit.INCH);
             }
@@ -40,10 +40,10 @@ public class Constants {
                 c.backLeftName.set("BL");
                 c.frontRightName.set("FR");
                 c.backRightName.set("BR");
-                c.frontLeftDirection.set(DcMotorSimple.Direction.FORWARD);
-                c.backLeftDirection.set(DcMotorSimple.Direction.FORWARD);
-                c.frontRightDirection.set(DcMotorSimple.Direction.REVERSE);
-                c.backRightDirection.set(DcMotorSimple.Direction.REVERSE);
+                c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
+                c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
+                c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);
+                c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
             }
     );
 
@@ -68,7 +68,7 @@ public class Constants {
                 c.maxAchievableStrafeVelocity.set(52.34323936525474);
                 c.naturalForwardDeceleration.set(50.01144677379789);
                 c.naturalStrafeDeceleration.set(104.49787535782846);
-                c.maxVelocityConstraint.set(20.0);
+                c.maxVelocityConstraint.set(50.0);
 //                c.maxPathSpeed.set(0.75);
             }
     );

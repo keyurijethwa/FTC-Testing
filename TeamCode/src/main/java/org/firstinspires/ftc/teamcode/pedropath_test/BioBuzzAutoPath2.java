@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.pedropath_test;
 
 import static com.pedropathing.api.Paths.*;
 
@@ -14,39 +14,37 @@ import static com.pedropathing.ivy.groups.Groups.parallel;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-import java.util.List;
-
-@Autonomous(name = "AutoPathBioBuzzPath1", group = "Autonomous")
-public class BioBuzzAutoPath1 extends LinearOpMode {
+@Autonomous(name = "BioBuzzAutoPath2", group = "Autonomous")
+public class BioBuzzAutoPath2 extends LinearOpMode {
 
     private Follower follower;
+
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
-    private final Pose start = poseFactory.of(0, 0, 90);
-    private final Pose path1 = poseFactory.of(0, 24, 90);
-    private final Pose point2 = poseFactory.of(46.5765, 133.6867, 90);
-    private ShooterSubsystem1 s;
-    private test_robot tr;
-    private Intake_Balls ib;
-    private Limelight3A limelight;
-    private double TARGET_TAG_ID=30;
-    private Path lastPath = null;
-    private boolean actionTriggered = false;
+    private final Pose start = poseFactory.of(56, 8, 90);
+    private final Pose path1 = poseFactory.of(56, 36, 90);
+    private final Pose point2Start = poseFactory.of(56, 36, 0);
+    private final Pose point2 = poseFactory.of(31, 36, 0);
+    private final Pose point3 = poseFactory.of(104, 36, 180);
+
 
     // Autonomous routine
     public Command autoRoutine() {
         return sequential(
-                        follow(follower, path1())
-                );
+                follow(follower, path1()),
+                waitMs(5000),
+                follow(follower, path2()),
+                waitMs(5000),
+                follow(follower,path3())
+
+        );
     }
 
     @Override
@@ -63,25 +61,28 @@ public class BioBuzzAutoPath1 extends LinearOpMode {
             follower.update();
             Scheduler.execute();
 
-            telemetry.addData("Busy", follower.isBusy());
-            telemetry.addData("Path Index", follower.pathIndex());
-            telemetry.addData("Completion", follower.completion());
-            telemetry.addData("Distance", follower.distanceToEndpoint());
+            telemetry.addData("x", follower.pose().x());
+            telemetry.addData("y", follower.pose().y());
+            telemetry.addData("heading", follower.pose().heading());
 
-            telemetry.addData("X", follower.pose().x());
-            telemetry.addData("Y", follower.pose().y());
-            telemetry.addData("Heading",Math.toDegrees(follower.pose().heading()));
+            if (follower.currentPath() != null) {
+                telemetry.addData("Current path distance remaining", follower.distanceToEndpoint());
+                telemetry.addData("Path number", follower.pathIndex());
+            }
 
             telemetry.update();
         }
     }
-
     public Path path1() {
         return line(start, path1).linear(start, path1);
     }
 
     public Path path2() {
-        return line(path1, point2).linear(path1, point2);
+        return line(point2Start, point2).linear(point2Start, point2);
     }
 
+    public Path path3() {
+        return line(point2, point3).linear(point2, point3);
+    }
 }
+

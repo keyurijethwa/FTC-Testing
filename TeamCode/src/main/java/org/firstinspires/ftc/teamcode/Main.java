@@ -48,12 +48,12 @@ public class Main extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        tr=new test_robot(hardwareMap);
-        ib=new Intake_Balls(hardwareMap);
-        s=new servo_d(hardwareMap);
-        sb=new ShootBalls(hardwareMap);
-        limelight3A=hardwareMap.get(Limelight3A.class,"limelight");
-        pinpoint=hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
+//        tr=new test_robot(hardwareMap);
+//        ib=new Intake_Balls(hardwareMap);
+//        s=new servo_d(hardwareMap);
+//        sb=new ShootBalls(hardwareMap);
+//        limelight3A=hardwareMap.get(Limelight3A.class,"limelight");
+//        pinpoint=hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
 
 //        clr=hardwareMap.get(Servo.class,"CLED");
 
@@ -221,18 +221,18 @@ public class Main extends LinearOpMode {
 //            }
 
 
-            if(gamepad1.left_bumper){
-                ib.in(0.7);
-            }
-            else {
-                ib.stop1();
-            }
-            if(gamepad1.left_trigger>0.2){
-                ib.out(0.5);
-            }
-            else {
-                ib.stop1();
-            }
+//            if(gamepad1.left_bumper){
+//                ib.in(0.7);
+//            }
+//            else {
+//                ib.stop1();
+//            }
+//            if(gamepad1.left_trigger>0.2){
+//                ib.out(0.5);
+//            }
+//            else {
+//                ib.stop1();
+//            }
 
             telemetry.addData(
                     "X (in)",

@@ -39,13 +39,6 @@ public class Ordometry extends OpMode {
         double x = pose2D.getX(DistanceUnit.INCH);
         double y = pose2D.getY(DistanceUnit.INCH);
 
-        // Drive until Y reaches 24 inches
-        if (y < TARGET_Y-Y_OFFSET) {
-            tr.drive(0.4);
-        } else {
-            tr.drive(0);
-        }
-
 
         telemetry.addData("X coordinate (IN)", pose2D.getX(DistanceUnit.INCH));
         telemetry.addData("Y coordinate (IN)", pose2D.getY(DistanceUnit.INCH));
