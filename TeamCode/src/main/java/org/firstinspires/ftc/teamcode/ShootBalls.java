@@ -102,7 +102,8 @@ public class ShootBalls {
 //            SR.setVelocity(targetVelocity);
 //        }
 //
-        SL.setPower(power);
+//        SL.setPower(power);
+        SL.setVelocity(200);
 //        SR.setPower(power);
 
     }

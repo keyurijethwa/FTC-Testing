@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.pedropath_test.BioBuzzShooterTest;
+import org.firstinspires.ftc.teamcode.pedropath_test.ShootTest;
 import org.firstinspires.ftc.teamcode.test_robot;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class Main extends LinearOpMode {
     private static final double DISTANCE_OFFSET_INCH = 5.0;
     private Servo clr;
     private boolean PRESSED=false;
-    private BioBuzzShooterTest sb;
+    private ShootTest sb;
 //    GoBildaPinpointDriver pinpoint;
 
 
@@ -50,7 +51,7 @@ public class Main extends LinearOpMode {
         tr=new test_robot(hardwareMap);
         ib=new Intake_Balls(hardwareMap);
 //        s=new servo_d(hardwareMap);
-        sb=new BioBuzzShooterTest(hardwareMap);
+        sb=new ShootTest(hardwareMap);
 //        limelight3A=hardwareMap.get(Limelight3A.class,"limelight");
 //        pinpoint=hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
 
@@ -62,28 +63,7 @@ public class Main extends LinearOpMode {
         // TELEMETRY BEFORE START
         // ==========================================
 
-        telemetry.addLine("================================");
-        telemetry.addLine(" APRILTAG CENTER + DISTANCE");
-        telemetry.addLine("================================");
 
-        telemetry.addData(
-                "Target Tag",
-                TARGET_TAG_ID
-        );
-
-        telemetry.addData(
-                "Target Distance",
-                "%.1f inches",
-                TARGET_DISTANCE_INCH
-        );
-
-        telemetry.addData(
-                "Distance Offset",
-                "%.1f inches",
-                DISTANCE_OFFSET_INCH
-        );
-
-        telemetry.update();
 //        intake_power=0.2;
 //
 //        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
@@ -116,9 +96,9 @@ public class Main extends LinearOpMode {
 //
 //            }
 //            pinpoint.update();
-            if(gamepad1.dpad_left){
-                PRESSED=true;
-            }
+//            if(gamepad1.dpad_left){
+//                PRESSED=true;
+//            }
 //            if (PRESSED){
 //                if (horizontalAngle > 2.0) {
 //                    tr.driveRight(0.6);
@@ -174,16 +154,16 @@ public class Main extends LinearOpMode {
 //            telemetry.update();
 
             if(gamepad1.left_bumper){
-                sb.forward(0.5);
+                sb.forwardsh();
             }
             else {
-                sb.stop();
+                sb.stopsh();
             }
             if(gamepad1.left_trigger>0.2){
-                sb.reverse(0.5);
+                sb.reversesh();
             }
             else {
-                sb.stop();
+                sb.stopsh();
             }
 
             if(gamepad1.right_bumper){

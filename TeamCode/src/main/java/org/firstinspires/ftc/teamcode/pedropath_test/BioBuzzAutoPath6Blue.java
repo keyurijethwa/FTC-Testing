@@ -4,7 +4,9 @@ import static com.pedropathing.api.Paths.curve;
 import static com.pedropathing.api.Paths.line;
 import static com.pedropathing.api.Paths.path;
 import static com.pedropathing.ivy.Scheduler.schedule;
+import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
+import static com.pedropathing.ivy.groups.Groups.parallel;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
@@ -32,41 +34,43 @@ public class BioBuzzAutoPath6Blue extends LinearOpMode {
     private final Pose path1Start = poseFactory.of(82.7079, 134.7056, 90);
     private final Pose path1 = poseFactory.of(83.2981, 102.2404, 90);
     private final Pose point2 = poseFactory.of(131.6217, 133.2102, 90);
-    private final Pose point3 = poseFactory.of(83.5764, 101.9887, 270);
-    private final Pose point4 = poseFactory.of(134.1689, 94.1453, 0);
-    private final Pose point5 = poseFactory.of(82.9906, 37.1123, 90);
-    private final Pose point5Control1 = poseFactory.of(130.0198, 56.5867, 0);
-    private final Pose point6 = poseFactory.of(135.3566, 36.5009, 90);
+    private final Pose point3 = poseFactory.of(83.2981, 102.2404, 90);
+    private final Pose point4Start=poseFactory.of(83.2981,102.2402,270);
+    private final Pose point4 = poseFactory.of(83.2981, 37.2404, 270);
+    private final Pose point5 = poseFactory.of(135.3566, 36.5009, 270);
     private Intake_Balls ib;
     private ShootBalls sb;
-    private servo_d s;
 
 
     public Command autoRoutine() {
         return sequential(
                 follow(follower,path1()),
+                parallel(instant(()->sb.reverse(0.1)),instant(()->ib.in(0.8))),
+                waitMs(2000),
+                parallel(instant(()->sb.stop()),instant(()->ib.stop1())),
                 follow(follower, path2()),
-                waitMs(1000),
+                instant(()->ib.in(0.8)),
+                waitMs(2000),
+                instant(()->ib.stop1()),
                 follow(follower,path3()),
                 follow(follower,path4()),
-                waitMs(1000),
-                follow(follower,path5()),
-                waitMs(1000),
-                follow(follower,path6())
+                parallel(instant(()->sb.reverse(0.1)),instant(()->ib.in(0.8))),
+                waitMs(2000),
+                parallel(instant(()->sb.stop()),instant(()->ib.stop1())),
+                follow(follower,path5())
         );
     }
     @Override
     public void runOpMode() throws InterruptedException {
         ib=new Intake_Balls(hardwareMap);
         sb=new ShootBalls(hardwareMap);
-        s=new servo_d(hardwareMap);
+
 
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
         follower.setPose(start);
         follower.update();
-        s.setPX();
-        s.setHalf();
+
         telemetry.addData("Stopper set",true);
         telemetry.update();
         waitForStart();
@@ -98,19 +102,16 @@ public class BioBuzzAutoPath6Blue extends LinearOpMode {
     }
 
     public Path path3() {
-        return line(point2, point3).reverseTangent();
+        return line(point2, point3).linear(point2,point3);
     }
 
     public Path path4() {
-        return line(point3, point4).reverseTangent();
+        return line(point4Start, point4).linear(point4Start,point4);
     }
 
     public Path path5() {
-        return curve(point4, point5Control1, point5).reverseTangent();
+        return line(point4,point5).linear(point4,point5);
     }
 
-    public Path path6() {
-        return line(point5, point6).reverseTangent();
-    }
 
 }

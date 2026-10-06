@@ -4,7 +4,10 @@ import static com.pedropathing.api.Paths.curve;
 import static com.pedropathing.api.Paths.line;
 import static com.pedropathing.api.Paths.path;
 import static com.pedropathing.ivy.Scheduler.schedule;
+import static com.pedropathing.ivy.commands.Commands.conditional;
+import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
+import static com.pedropathing.ivy.groups.Groups.parallel;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
@@ -44,28 +47,39 @@ public class BioBuzzAutoPath5Red extends LinearOpMode {
     private final Pose path6Start=poseFactory.of(40,138,90);
     private final Pose path7=poseFactory.of(13,110,90);
 
-
+    private ShootTest sb;
+    private Intake_Balls ib;
+    private boolean DONE=true;
     public Command autoRoutine() {
         return sequential(
                 follow(follower,path1()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(2000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower, path2()),
+                instant(()->ib.in(0.8)),
                 waitMs(2000),
+                instant(()->ib.stop1()),
                 follow(follower,path3()),
-                waitMs(2000),
                 follow(follower,path4()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(2000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower,path5()),
+                instant(()->ib.in(0.8)),
                 waitMs(2000),
+                instant(()->ib.stop1()),
                 follow(follower,path6()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(2000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower,path7())
         );
     }
     @Override
     public void runOpMode() throws InterruptedException {
-//        ib=new Intake_Balls(hardwareMap);
-//        sb=new ShootBalls(hardwareMap);
+        ib=new Intake_Balls(hardwareMap);
+        sb=new ShootTest(hardwareMap);
 //        s=new servo_d(hardwareMap);
 
         Scheduler.reset();

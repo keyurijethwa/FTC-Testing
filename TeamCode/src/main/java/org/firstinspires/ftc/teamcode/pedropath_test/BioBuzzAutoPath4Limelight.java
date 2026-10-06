@@ -69,14 +69,7 @@ public class BioBuzzAutoPath4Limelight extends LinearOpMode {
                 alignWithLimelight(),
                 waitMs(2000),
                 follow(follower,path2())
-//                waitMs(2000),
-//                follow(follower,path3()),
-//                waitMs(2000),
-//                follow(follower,path4()),
-//                waitMs(2000),
-//                follow(follower,path5()),
-//                waitMs(2000),
-//                follow(follower,path6())
+
         );
     }
     public Command alignWithLimelight() {
