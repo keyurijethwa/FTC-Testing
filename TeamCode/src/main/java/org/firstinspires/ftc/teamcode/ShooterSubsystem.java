@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class ShooterSubsystem {
 
     private final DcMotorEx shooterL;
-    private final DcMotorEx shooterR;
+//    private final DcMotorEx shooterR;
     private static final double FAST_VELOCITY = 1280;
     private static final double SLOW_VELOCITY = 1260;
     private static final double SHORT_VELOCITY = 1240;
@@ -20,27 +20,27 @@ public class ShooterSubsystem {
 
     public ShooterSubsystem(HardwareMap hardwareMap) {
 
-        shooterL = hardwareMap.get(DcMotorEx.class, "SL");
-        shooterR = hardwareMap.get(DcMotorEx.class, "SR");
+        shooterL = hardwareMap.get(DcMotorEx.class, "SH");
+//        shooterR = hardwareMap.get(DcMotorEx.class, "SR");
 
-        shooterL.setDirection(DcMotor.Direction.REVERSE);
-        shooterR.setDirection(DcMotor.Direction.FORWARD);
+        shooterL.setDirection(DcMotor.Direction.FORWARD);
+//        shooterR.setDirection(DcMotor.Direction.FORWARD);
 
         shooterL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        shooterR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        shooterR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         shooterL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        shooterR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        shooterR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         shooterL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooterR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        shooterR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 
         // === NEW TUNED PIDF COEFFICIENTS (UPDATED) ===
         // P=125, I=0, D=5, F=15 for lock and fast recovery
         shooterL.setVelocityPIDFCoefficients(250, 0, 5, 15);
-        shooterR.setVelocityPIDFCoefficients(250, 0, 5, 15);
+//        shooterR.setVelocityPIDFCoefficients(250, 0, 5, 15);
     }
 
     public void shootFast() {
@@ -63,37 +63,37 @@ public class ShooterSubsystem {
 
         if (currentVel < velocity - SPINUP_BOOST_ERROR) {
             shooterL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            shooterR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            shooterR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             shooterL.setPower(0.7);
-            shooterR.setPower(0.7);
+//            shooterR.setPower(0.7);
         } else {
             if (shooterL.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
                 shooterL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                shooterR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                shooterR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
                 // Coefficients ko hardware par force-refresh karein
                 shooterL.setVelocityPIDFCoefficients(10, 0, 5, 15);
-                shooterR.setVelocityPIDFCoefficients(10, 0, 5, 15);
+//                shooterR.setVelocityPIDFCoefficients(10, 0, 5, 15);
             }
             shooterL.setVelocity(velocity);
-            shooterR.setVelocity(velocity);
+//            shooterR.setVelocity(velocity);
         }
     }
 
     public void stop() {
         // Stop karte waqt hamesha zero power dein taaki motor turant free ho jaye
         shooterL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooterR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        shooterR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shooterL.setPower(0);
-        shooterR.setPower(0);
+//        shooterR.setPower(0);
     }
 
     public void reverse() {
         shooterL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooterR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        shooterR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shooterL.setPower(-0.5);
-        shooterR.setPower(-0.5);
+//        shooterR.setPower(-0.5);
     }
 
     public boolean readyForFastShot() {
@@ -105,15 +105,15 @@ public class ShooterSubsystem {
     }
 
     public double getAverageVelocity() {
-        return (Math.abs(shooterL.getVelocity())
-                + Math.abs(shooterR.getVelocity())) / 2.0;
+        return Math.abs(shooterL.getVelocity());
+//                + Math.abs(shooterR.getVelocity())) / 2.0;
     }
 
     public double getLeftVelocity() {
         return shooterL.getVelocity();
     }
 
-    public double getRightVelocity() {
-        return shooterR.getVelocity();
-    }
+//    public double getRightVelocity() {
+//        return shooterR.getVelocity();
+//    }
 }

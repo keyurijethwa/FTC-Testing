@@ -33,7 +33,7 @@ public class BioBuzzAutoPath3 extends LinearOpMode {
 
     private Follower follower;
     private final PoseFactory poseFactory = PoseFactory.degrees();
-
+    private boolean angleValid = false;
     private final Pose start = poseFactory.of(58.6796, 133.6867, 90);
     private final Pose path1 = poseFactory.of(58.6796, 105.6867, 90);
     private final Pose point2 = poseFactory.of(46.5765, 133.6867, 90);
@@ -60,7 +60,6 @@ public class BioBuzzAutoPath3 extends LinearOpMode {
         return sequential(
                         follow(follower, path1()),
                         waitMs(2000),
-                        alignWithLimelight(),
                         follow(follower,path2()),
                         waitMs(2000),
                         follow(follower,path3()),
@@ -72,59 +71,6 @@ public class BioBuzzAutoPath3 extends LinearOpMode {
                         follow(follower,path6())
                 );
     }
-    public Command alignWithLimelight() {
-        return Command.build()
-                .setStart(() -> {
-                    horizontalAngle = 999;
-                })
-                .setExecute(() -> {
-                    LLResult result = limelight.getLatestResult();
-
-                    if (result == null || !result.isValid()) {
-                        tr.stopDrive();
-                        return;
-                    }
-
-                    List<LLResultTypes.FiducialResult> tags =
-                            result.getFiducialResults();
-
-                    LLResultTypes.FiducialResult targetTag = null;
-
-                    for (LLResultTypes.FiducialResult tag : tags) {
-                        if (tag.getFiducialId() == (int) TARGET_TAG_ID) {
-                            targetTag = tag;
-                            break;
-                        }
-                    }
-
-                    if (targetTag == null) {
-                        tr.stopDrive();
-                        return;
-                    }
-
-                    Pose3D targetPose = targetTag.getTargetPoseCameraSpace();
-
-                    if (targetPose == null) {
-                        tr.stopDrive();
-                        return;
-                    }
-
-                    double x = targetPose.getPosition().x;
-                    double z = targetPose.getPosition().z;
-
-                    horizontalAngle = Math.toDegrees(Math.atan2(x, z));
-
-                    if (horizontalAngle > 2.0) {
-                        tr.driveRight(0.6);
-                    } else if (horizontalAngle < -2.0) {
-                        tr.driveLeft(0.6);
-                    } else {
-                        tr.stopDrive();
-                    }
-                })
-                .setDone(() -> Math.abs(horizontalAngle) <= 2.0);
-    }
-
     @Override
     public void runOpMode() {
         Scheduler.reset();

@@ -17,17 +17,17 @@ public class ShootBalls {
     private PIDFCoefficients check;
 
     public ShootBalls(HardwareMap hardwareMap){
-        SL=hardwareMap.get(DcMotorEx.class,"SL");
-        SR=hardwareMap.get(DcMotorEx.class,"SR");
+        SL=hardwareMap.get(DcMotorEx.class,"SH");
+//        SR=hardwareMap.get(DcMotorEx.class,"SR");
 
         SL.setDirection(DcMotorSimple.Direction.FORWARD);
-        SR.setDirection(DcMotorSimple.Direction.FORWARD);
+//        SR.setDirection(DcMotorSimple.Direction.FORWARD);
 
         SL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        SR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        SR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         SL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        SR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        SR.setMode(DcMotor.RunMod e.RUN_USING_ENCODER);
         PIDFCoefficients pidf =
                 new PIDFCoefficients(100, 0, 5, 15.5);
 
@@ -36,10 +36,10 @@ public class ShootBalls {
                 pidf
         );
 
-        SR.setPIDFCoefficients(
-                DcMotor.RunMode.RUN_USING_ENCODER,
-                pidf
-        );
+//        SR.setPIDFCoefficients(
+//                DcMotor.RunMode.RUN_USING_ENCODER,
+//                pidf
+//        );
 //        SL.setVelocityPIDFCoefficients(170, 0, 5, 15.5);
 //        SR.setVelocityPIDFCoefficients(170, 0, 5, 15.5);
         check = SL.getPIDFCoefficients(
@@ -49,7 +49,7 @@ public class ShootBalls {
 
     public void stop(){
         SL.setPower(0);
-        SR.setPower(0);
+//        SR.setPower(0);
     }
 
     public void forward(double power){
@@ -103,25 +103,25 @@ public class ShootBalls {
 //        }
 //
         SL.setPower(power);
-        SR.setPower(power);
+//        SR.setPower(power);
 
     }
     public void reverse(double power){
         SL.setPower(-power);
-        SR.setPower(-power);
+//        SR.setPower(-power);
     }
 
-    public double getLeftVelocity() {
-        return Math.abs(SL.getVelocity());
-    }
-
-    public double getRightVelocity() {
-        return Math.abs(SR.getVelocity());
-    }
-    public double getVelocity(){
-        double total=(SL.getVelocity()+ SR.getVelocity())/2;
-        return Math.abs(total);
-    }
+//    public double getLeftVelocity() {
+//        return Math.abs(SL.getVelocity());
+//    }
+//
+//    public double getRightVelocity() {
+//        return Math.abs(SR.getVelocity());
+//    }
+//    public double getVelocity(){
+//        double total=(SL.getVelocity()+ SR.getVelocity())/2;
+//        return Math.abs(total);
+//    }
 
     public double getLPvalue(){
         return SL.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER).p;
@@ -135,16 +135,16 @@ public class ShootBalls {
     public double getLFvalue(){
         return SL.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER).f;
     }
-    public double getRPvalue(){
-        return SR.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER).p;
-    }
-    public double getRIvalue(){
-        return SR.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER).i;
-    }
-    public double getRDvalue(){
-        return SR.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER).d;
-    }
-    public double getRFvalue(){
-        return SR.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER).f;
-    }
+//    public double getRPvalue(){
+//        return SR.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER).p;
+//    }
+//    public double getRIvalue(){
+//        return SR.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER).i;
+//    }
+//    public double getRDvalue(){
+//        return SR.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER).d;
+//    }
+//    public double getRFvalue(){
+//        return SR.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER).f;
+//    }
 }

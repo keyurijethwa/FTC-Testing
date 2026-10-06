@@ -28,8 +28,8 @@ public class Constants {
                 c.podType.set(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
                 c.xPodOffset.set(1.1088921704630212);
                 c.yPodOffset.set(0.5617631326510212);
-                c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
-                c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+                c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+                c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
                 c.globalDistanceUnit.set(DistanceUnit.INCH);
                 c.offsetUnits.set(DistanceUnit.INCH);
             }
@@ -40,10 +40,10 @@ public class Constants {
                 c.backLeftName.set("BL");
                 c.frontRightName.set("FR");
                 c.backRightName.set("BR");
-                c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
-                c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
-                c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);
-                c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
+                c.frontLeftDirection.set(DcMotorSimple.Direction.FORWARD);
+                c.backLeftDirection.set(DcMotorSimple.Direction.FORWARD);
+                c.frontRightDirection.set(DcMotorSimple.Direction.REVERSE);
+                c.backRightDirection.set(DcMotorSimple.Direction.REVERSE);
             }
     );
 

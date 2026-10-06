@@ -29,9 +29,8 @@ public class AutoPath extends LinearOpMode {
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
     private final Pose start = poseFactory.of(0, 0, 90);
-    private final Pose path1 = poseFactory.of(50, 50, 90);
-    private final Pose path2start = poseFactory.of(50, 50, 90);
-    private final Pose path2=poseFactory.of(50,70,90);
+    private final Pose path1 = poseFactory.of(0, 50, 90);
+    private final Pose path2=poseFactory.of(50,50,90);
 
 
 
@@ -128,7 +127,7 @@ public class AutoPath extends LinearOpMode {
     }
     public Path path2() {
 
-        return line(path2start, path2).linear(path2start, path2);
+        return line(path1, path2).linear(path1, path2);
     }
 }
 
