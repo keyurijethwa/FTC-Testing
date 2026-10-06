@@ -96,195 +96,99 @@ public class BioBuzzAutoPath4Limelight extends LinearOpMode {
 
                 .setExecute(() -> {
 
-                    // =====================================
-                    // CHECK 5 SECOND TIME
-                    // =====================================
-
                     long elapsed =
                             System.currentTimeMillis()
                                     - alignmentStartTime;
 
-                    if (elapsed >= ALIGNMENT_TIME) {
+                    // Still within 5-second checking period
+                    if (elapsed < ALIGNMENT_TIME) {
 
-                        tr.stopDrive();
+                        LLResult result =
+                                limelight.getLatestResult();
 
-                        telemetry.addLine(
-                                "=== ALIGNMENT FINISHED ==="
+                        if (result == null || !result.isValid()) {
+                            tr.stopDrive();
+                            return;
+                        }
+
+                        List<LLResultTypes.FiducialResult> tags =
+                                result.getFiducialResults();
+
+                        LLResultTypes.FiducialResult targetTag = null;
+
+                        for (LLResultTypes.FiducialResult tag : tags) {
+
+                            if (tag.getFiducialId() == (int) TARGET_TAG_ID) {
+                                targetTag = tag;
+                                break;
+                            }
+                        }
+
+                        if (targetTag == null) {
+                            tr.stopDrive();
+                            return;
+                        }
+
+                        Pose3D targetPose =
+                                targetTag.getTargetPoseCameraSpace();
+
+                        if (targetPose == null) {
+                            tr.stopDrive();
+                            return;
+                        }
+
+                        double x =
+                                targetPose.getPosition().x;
+
+                        double z =
+                                targetPose.getPosition().z;
+
+                        horizontalAngle =
+                                Math.toDegrees(
+                                        Math.atan2(x, z)
+                                );
+
+                        angleValid = true;
+
+                        // ALIGNMENT
+                        if (horizontalAngle > 2.0) {
+
+                            tr.driveRight(0.5);
+
+                        } else if (horizontalAngle < -2.0) {
+
+                            tr.driveLeft(0.5);
+
+                        } else {
+
+                            // CENTERED → STOP
+                            tr.stopDrive();
+                        }
+
+                        telemetry.addData(
+                                "Angle",
+                                "%.2f°",
+                                horizontalAngle
                         );
 
-                        telemetry.update();
-
-                        return;
-                    }
-
-
-                    // =====================================
-                    // GET LIMELIGHT RESULT
-                    // =====================================
-
-                    LLResult result =
-                            limelight.getLatestResult();
-
-                    if (result == null || !result.isValid()) {
-
-                        // Don't move if Limelight has no data
-                        tr.stopDrive();
-
-                        telemetry.addLine(
-                                "NO VALID LIMELIGHT RESULT"
+                        telemetry.addData(
+                                "Centered",
+                                Math.abs(horizontalAngle) <= 2.0
                         );
 
                         telemetry.addData(
                                 "Time",
-                                "%.1f / 5.0 sec",
+                                "%.2f / 5.0",
                                 elapsed / 1000.0
                         );
 
                         telemetry.update();
-
-                        return;
                     }
 
-
-                    // =====================================
-                    // FIND TAG 30
-                    // =====================================
-
-                    List<LLResultTypes.FiducialResult> tags =
-                            result.getFiducialResults();
-
-                    LLResultTypes.FiducialResult targetTag = null;
-
-                    for (LLResultTypes.FiducialResult tag : tags) {
-
-                        if (tag.getFiducialId()
-                                == (int) TARGET_TAG_ID) {
-
-                            targetTag = tag;
-                            break;
-                        }
-                    }
-
-
-                    // =====================================
-                    // TAG NOT FOUND
-                    // =====================================
-
-                    if (targetTag == null) {
-
-                        tr.stopDrive();
-
-                        telemetry.addLine(
-                                "TAG 30 NOT FOUND"
-                        );
-
-                        telemetry.update();
-
-                        return;
-                    }
-
-
-                    // =====================================
-                    // GET TAG POSE
-                    // =====================================
-
-                    Pose3D targetPose =
-                            targetTag.getTargetPoseCameraSpace();
-
-                    if (targetPose == null) {
-
-                        tr.stopDrive();
-                        return;
-                    }
-
-
-                    // =====================================
-                    // CALCULATE ANGLE
-                    // =====================================
-
-                    double x =
-                            targetPose.getPosition().x;
-
-                    double z =
-                            targetPose.getPosition().z;
-
-                    horizontalAngle =
-                            Math.toDegrees(
-                                    Math.atan2(x, z)
-                            );
-
-                    angleValid = true;
-
-
-                    // =====================================
-                    // ALIGN ROBOT
-                    // =====================================
-
-                    if (horizontalAngle > 2.0) {
-
-                        // Robot is NOT centered
-                        tr.driveRight(0.5);
-
-                        telemetry.addLine(
-                                ">>> MOVING RIGHT"
-                        );
-
-                    }
-
-                    else if (horizontalAngle < -2.0) {
-
-                        // Robot is NOT centered
-                        tr.driveLeft(0.5);
-
-                        telemetry.addLine(
-                                "<<< MOVING LEFT"
-                        );
-
-                    }
-
-                    else {
-
-                        // Robot is centered
-                        // STOP COMPLETELY
-                        tr.stopDrive();
-
-                        telemetry.addLine(
-                                "✓ CENTERED - STOPPED"
-                        );
-                    }
-
-
-                    // =====================================
-                    // TELEMETRY
-                    // =====================================
-
-                    telemetry.addData(
-                            "Angle",
-                            "%.2f°",
-                            horizontalAngle
-                    );
-
-                    telemetry.addData(
-                            "X",
-                            "%.3f",
-                            x
-                    );
-
-                    telemetry.addData(
-                            "Z",
-                            "%.3f",
-                            z
-                    );
-
-                    telemetry.addData(
-                            "Alignment Time",
-                            "%.1f / 5.0 sec",
-                            elapsed / 1000.0
-                    );
-
-                    telemetry.update();
+                    // If 5 seconds are finished,
+                    // DO NOT move here.
+                    // setDone() will decide whether we can finish.
                 })
-
 
                 // =========================================
                 // ONLY FINISH AFTER 5 SECONDS
@@ -296,17 +200,17 @@ public class BioBuzzAutoPath4Limelight extends LinearOpMode {
                             System.currentTimeMillis()
                                     - alignmentStartTime;
 
-                    if (elapsed >= ALIGNMENT_TIME) {
+                    boolean timeFinished =
+                            elapsed >= ALIGNMENT_TIME;
+
+                    boolean robotCentered =
+                            angleValid &&
+                                    Math.abs(horizontalAngle) <= 2.0;
+
+                    if (timeFinished && robotCentered) {
 
                         tr.stopDrive();
-
                         limelightAligning = false;
-
-                        telemetry.addLine(
-                                "=== 5 SECOND ALIGNMENT COMPLETE ==="
-                        );
-
-                        telemetry.update();
 
                         return true;
                     }
@@ -360,13 +264,6 @@ public class BioBuzzAutoPath4Limelight extends LinearOpMode {
         return line(point4Start, point4).linear(point4Start, point4);
     }
 
-    public Path path5() {
-        return line(point5Start, point5).linear(point5Start, point5);
-    }
-
-    public Path path6() {
-        return line(point6Start, point6).linear(point6Start, point6);
-    }
     public void getPosition(){
         if (horizontalAngle > 2.0) {
             tr.driveRight(0.6);

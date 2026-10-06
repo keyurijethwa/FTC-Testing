@@ -33,7 +33,6 @@ public class BioBuzzAutoPathDistanceLimelightTest extends LinearOpMode {
     private Follower follower;
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
-
     private final Pose start = poseFactory.of(0, 0, 90);
     private final Pose path1 = poseFactory.of(0, 50, 90);
     private final Pose path2=poseFactory.of(20,50,90);

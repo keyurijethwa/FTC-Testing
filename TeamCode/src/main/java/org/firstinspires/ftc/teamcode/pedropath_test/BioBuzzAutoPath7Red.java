@@ -48,20 +48,31 @@ public class BioBuzzAutoPath7Red extends LinearOpMode {
     private test_robot tr;
     private Intake_Balls ib;
 
+    private ShootTest sb;
 
     // Autonomous routine
     public Command autoRoutine() {
         return sequential(
                 follow(follower, path1()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(2000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower,path2()),
+                instant(()->ib.in(0.8)),
                 waitMs(2000),
+                instant(()->ib.stop1()),
                 follow(follower,path3()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(2000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower,path4()),
+                instant(()->ib.in(0.8)),
                 waitMs(2000),
+                instant(()->ib.stop1()),
                 follow(follower,path5()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(2000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower,path6())
         );
     }
@@ -69,10 +80,10 @@ public class BioBuzzAutoPath7Red extends LinearOpMode {
     public void runOpMode() {
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
-//        s=new ShooterSubsystem1(hardwareMap);
+        sb=new ShootTest(hardwareMap);
 //        limelight=hardwareMap.get(Limelight3A.class,"limelight");
 //        tr=new test_robot(hardwareMap);
-//        ib=new Intake_Balls(hardwareMap);
+        ib=new Intake_Balls(hardwareMap);
         follower.setPose(start);
         follower.update();
 

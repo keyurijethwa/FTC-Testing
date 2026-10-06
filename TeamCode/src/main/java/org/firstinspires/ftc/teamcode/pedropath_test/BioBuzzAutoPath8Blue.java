@@ -10,11 +10,13 @@ import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.Scheduler;
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.commands.Commands.*;
+import static com.pedropathing.ivy.groups.Groups.parallel;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Intake_Balls;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous(name = "BioBuzzAutoPath8Blue", group = "Autonomous")
@@ -36,25 +38,40 @@ public class BioBuzzAutoPath8Blue extends LinearOpMode {
     private final Pose point6 = poseFactory.of(132.6283, 36.5264, 90);
     private final Pose point6Control1 = poseFactory.of(130.0123, 80.1075, 90);
 
+    private ShootTest sb;
+    private Intake_Balls ib;
+
     // Autonomous routine
     public Command autoRoutine() {
         return sequential(
                 follow(follower, path1()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(2000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower, path2()),
+                instant(()->ib.in(0.8)),
                 waitMs(2000),
+                instant(()->ib.stop1()),
                 follow(follower, path3()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(2000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower, path4()),
+                instant(()->ib.in(0.8)),
                 waitMs(2000),
+                instant(()->ib.stop1()),
                 follow(follower, path5()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(2000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower, path6())
         );
     }
 
     @Override
     public void runOpMode() {
+        sb=new ShootTest(hardwareMap);
+        ib=new Intake_Balls(hardwareMap);
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
         follower.setPose(start);
