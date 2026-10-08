@@ -53,6 +53,7 @@ public class BioBuzzAutoPath5Red extends LinearOpMode {
     public Command autoRoutine() {
         return sequential(
                 follow(follower,path1()),
+
                 parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(2000),
                 parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
