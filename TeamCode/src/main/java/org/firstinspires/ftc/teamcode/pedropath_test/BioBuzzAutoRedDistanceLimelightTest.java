@@ -299,9 +299,10 @@ public class BioBuzzAutoRedDistanceLimelightTest extends LinearOpMode {
         );
 
         rgbRed();
-
         follower.setPose(start);
         follower.update();
+        limelight.pipelineSwitch(0);
+        limelight.start();
 
         telemetry.addLine("BIOBUZZ RED AUTO");
         telemetry.addLine("RGB PATH INDICATOR");
@@ -400,7 +401,6 @@ public class BioBuzzAutoRedDistanceLimelightTest extends LinearOpMode {
     }
 
     public Path path6() {
-
         return curve(
                 point5,
                 point6Control1,

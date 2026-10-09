@@ -28,23 +28,24 @@ import org.firstinspires.ftc.teamcode.test_robot;
 
 import java.util.List;
 
-@Autonomous(name = "BioBuzzAutoPath7Red", group = "Autonomous")
-public class BioBuzzAutoPath7Red extends LinearOpMode {
+@Autonomous(name = "BioBuzzAutoPath12Blue", group = "Autonomous")
+public class BioBuzzAutoPath12Blue extends LinearOpMode {
 
     private Follower follower;
     private final PoseFactory poseFactory = PoseFactory.degrees();
-    private final Pose start = poseFactory.of(58.6796, 133.6867, 90);
-    private final Pose path1 = poseFactory.of(58.6796, 105.6867, 90);
-    private final Pose point2 = poseFactory.of(46.5765, 133.6867, 90);
-    private final Pose point3 = poseFactory.of(58.6796, 105.6867, 90);
-    private final Pose point4Start = poseFactory.of(58.6796, 105.6867, 180);
-    private final Pose point4Control1 = poseFactory.of(14.4915, 89.8642, 180);
-    private final Pose point4 = poseFactory.of(12.6459, 47.7531, 180);
-    private final Pose point5Start = poseFactory.of(12.6459, 47.7531, 270);
-    private final Pose point5 = poseFactory.of(57.6796, 39.8173, 270);
-    private final Pose point6 = poseFactory.of(12.5235, 115.5194, 270);
-    private final Pose point6Control1 = poseFactory.of(1.8802, 50.3368, 270);
+    private final Pose start = poseFactory.of(81.4855, 6.2877, 90);
+    private final Pose path1Start = poseFactory.of(81.4855, 6.2877, 270);
 
+    private final Pose path1 = poseFactory.of(84.4292, 37.3008, 270);
+    private final Pose point2 = poseFactory.of(95.5792, 7.9961, 270);
+    private final Pose point3 = poseFactory.of(84.7802, 37.4283, 270);
+    private final Pose point4 = poseFactory.of(132.9726, 91.4613, 0);
+    private final Pose point4Control1 = poseFactory.of(133.0991, 51.084, 0);
+    private final Pose point5 = poseFactory.of(84.2623, 106.267, 90);
+    private final Pose point6 = poseFactory.of(130.3679, 130.5906, 90);
+    private final Pose point7 = poseFactory.of(84.3821, 105.6792, 90);
+    private final Pose point8 = poseFactory.of(132.0283, 40.3113, 90);
+    private final Pose point8Control1 = poseFactory.of(131.9255, 77.8245, 90);
     private test_robot tr;
     private Intake_Balls ib;
 
@@ -73,7 +74,16 @@ public class BioBuzzAutoPath7Red extends LinearOpMode {
                 parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(3000),
                 parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
-                follow(follower,path6())
+                follow(follower,path6()),
+                instant(()->ib.in(0.8)),
+                waitMs(3000),
+                instant(()->ib.stop1()),
+                follow(follower,path7()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
+                waitMs(3000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
+                follow(follower,path8())
+
         );
     }
     @Override
@@ -101,7 +111,7 @@ public class BioBuzzAutoPath7Red extends LinearOpMode {
     }
 
     public Path path1() {
-        return line(start, path1).linear(start, path1);
+        return line(path1Start, path1).linear(path1Start, path1);
     }
 
     public Path path2() {
@@ -113,15 +123,21 @@ public class BioBuzzAutoPath7Red extends LinearOpMode {
     }
 
     public Path path4() {
-        return curve(point4Start,point4Control1, point4).linear(point4Start, point4);
+        return curve(point3,point4Control1, point4).linear(point3, point4);
     }
 
     public Path path5() {
-        return line(point5Start, point5).linear(point5Start, point5);
+        return line(point4, point5).linear(point4, point5);
+    }
+    public Path path6() {
+        return line(point5, point6).linear(point5, point6);
+    }
+    public Path path7() {
+        return line(point6, point7).linear(point6, point7);
     }
 
-    public Path path6() {
-        return curve(point5,point6Control1, point6).linear(point5, point6);
+    public Path path8() {
+        return curve(point7,point8Control1, point8).linear(point7, point8);
     }
 
 

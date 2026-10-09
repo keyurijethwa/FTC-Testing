@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.pedropath_test;
 
 import static com.pedropathing.api.Paths.line;
 import static com.pedropathing.ivy.Scheduler.schedule;
+import static com.pedropathing.ivy.commands.Commands.conditional;
 import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.groups.Groups.parallel;
@@ -15,21 +16,29 @@ import com.pedropathing.ivy.Scheduler;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Intake_Balls;
+import org.firstinspires.ftc.teamcode.PinpointTest;
 import org.firstinspires.ftc.teamcode.ShootBalls;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
+
+import java.util.List;
 
 @Autonomous(name = "BioBuzzAutoBlueDistanceLimelightTest")
 public class BioBuzzAutoBlueDistanceLimelightTest extends LinearOpMode {
 
     private Follower follower;
     private Intake_Balls ib;
-    private ShootBalls sb;
+    private ShootTest sb;
     private Servo rgbLight;
+    private Limelight3A limelight;
 
     private final PoseFactory poseFactory =
             PoseFactory.degrees();
@@ -51,6 +60,7 @@ public class BioBuzzAutoBlueDistanceLimelightTest extends LinearOpMode {
 
     private final Pose point4Start =
             poseFactory.of(83.2981, 102.2402, 270);
+
 
     private final Pose point4 =
             poseFactory.of(83.2981, 37.2404, 270);
@@ -89,28 +99,12 @@ public class BioBuzzAutoBlueDistanceLimelightTest extends LinearOpMode {
                 }),
 
                 follow(follower, path1()),
-
-                instant(() -> {
-                    rgbRed();
-                    telemetry.addLine("RGB: RED - SHOOT 1");
-                }),
-
-                parallel(
-                        instant(() -> sb.reverse(0.1)),
-                        instant(() -> ib.in(0.8))
+                waitMs(4000),
+                conditional(
+                        ()->isDistanceHigh(),
+                        distanceMore(),
+                        shoot()
                 ),
-
-                waitMs(2000),
-
-                parallel(
-                        instant(() -> sb.stop()),
-                        instant(() -> ib.stop1())
-                ),
-
-                instant(() -> {
-                    rgbGreen();
-                    telemetry.addLine("RGB: GREEN - PATH 2");
-                }),
 
                 follow(follower, path2()),
 
@@ -145,14 +139,14 @@ public class BioBuzzAutoBlueDistanceLimelightTest extends LinearOpMode {
                 }),
 
                 parallel(
-                        instant(() -> sb.reverse(0.1)),
+                        instant(() -> sb.forwardsh()),
                         instant(() -> ib.in(0.8))
                 ),
 
                 waitMs(2000),
 
                 parallel(
-                        instant(() -> sb.stop()),
+                        instant(() -> sb.stopsh()),
                         instant(() -> ib.stop1())
                 ),
 
@@ -170,11 +164,115 @@ public class BioBuzzAutoBlueDistanceLimelightTest extends LinearOpMode {
         );
     }
 
+    public Command shoot() {
+
+        return sequential(
+                instant(() -> {
+                    rgbRed();
+                    telemetry.addLine("RGB: RED - SHOOTING");
+                }),
+
+                parallel(
+                        instant(() -> sb.forwardsh()),
+                        instant(() -> ib.in(0.8))
+                ),
+
+                waitMs(3000),
+
+                parallel(
+                        instant(() -> sb.stopsh()),
+                        instant(() -> ib.stop1())
+                )
+        );
+    }
+
+    public Command distanceMore() {
+
+        return sequential(
+                instant(() -> {
+                    rgbGreen();
+                    telemetry.addLine("RGB: GREEN - PATH 51");
+                }),
+
+                follow(follower, path41()),
+
+                instant(() -> {
+                    rgbYellow();
+                    telemetry.addLine("RGB: YELLOW - SECOND DISTANCE CHECK");
+                }),
+                waitMs(4000),
+
+                conditional(
+                        () -> isDistanceHigh(),
+                        condition2True(),
+                        condition2False()
+                )
+        );
+    }
+    public Command condition2True() {
+
+        return sequential(
+                instant(() -> {
+                    rgbBlue();
+                    telemetry.addLine("RGB: BLUE - PATH 11");
+                }),
+
+                follow(follower, path11()),
+
+                instant(() -> {
+                    rgbRed();
+                    telemetry.addLine("RGB: RED - SHOOTING");
+                }),
+
+                parallel(
+                        instant(() -> sb.forwardsh()),
+                        instant(() -> ib.in(0.8))
+                ),
+
+                waitMs(3000),
+
+                parallel(
+                        instant(() -> sb.stopsh()),
+                        instant(() -> ib.stop1())
+                )
+        );
+    }
+
+    public Command condition2False() {
+
+        return sequential(
+                instant(() -> {
+                    rgbRed();
+                    telemetry.addLine("RGB: RED - SHOOTING");
+                }),
+
+                parallel(
+                        instant(() -> sb.forwardsh()),
+                        instant(() -> ib.in(0.8))
+                ),
+
+                waitMs(3000),
+
+                parallel(
+                        instant(() -> sb.stopsh()),
+                        instant(() -> ib.stop1())
+                ),
+
+                instant(() -> {
+                    rgbBlue();
+                    telemetry.addLine("RGB: BLUE - PATH 11");
+                }),
+
+                follow(follower, path11())
+        );
+    }
+
     @Override
     public void runOpMode() {
 
         ib = new Intake_Balls(hardwareMap);
-        sb = new ShootBalls(hardwareMap);
+        sb = new ShootTest(hardwareMap);
+        limelight=hardwareMap.get(Limelight3A.class,"limelight");
 
         rgbLight = hardwareMap.get(
                 Servo.class,
@@ -187,8 +285,10 @@ public class BioBuzzAutoBlueDistanceLimelightTest extends LinearOpMode {
 
         follower.setPose(start);
         follower.update();
-
+        limelight.pipelineSwitch(0);
+        limelight.start();
         rgbGreen();
+
 
         telemetry.addLine("AUTO BLUE PATH 1");
         telemetry.addLine("RGB PATH INDICATOR");
@@ -257,6 +357,9 @@ public class BioBuzzAutoBlueDistanceLimelightTest extends LinearOpMode {
                 path1
         );
     }
+    public Path path11(){
+        return line(point4,path1).linear(point4,path1);
+    }
 
     public Path path2() {
 
@@ -300,5 +403,59 @@ public class BioBuzzAutoBlueDistanceLimelightTest extends LinearOpMode {
                 point4,
                 point5
         );
+    }
+    public Path path41(){
+        return line(path1,point4).linear(path1,point4);
+    }
+    private double getLimelightDistance() {
+
+        LLResult result = limelight.getLatestResult();
+
+        if (result == null || !result.isValid()) {
+            return -1;
+        }
+
+        List<LLResultTypes.FiducialResult> tags =
+                result.getFiducialResults();
+
+        for (LLResultTypes.FiducialResult tag : tags) {
+
+            if (tag.getFiducialId() == 30 || tag.getFiducialId()==35) {
+
+                Pose3D targetPose =
+                        tag.getTargetPoseCameraSpace();
+
+                if (targetPose == null) {
+                    return -1;
+                }
+
+                double x = targetPose.getPosition().x;
+                double y = targetPose.getPosition().y;
+                double z = targetPose.getPosition().z;
+
+                return Math.sqrt(
+                        x * x +
+                                y * y +
+                                z * z
+                ) * 39.3701;
+            }
+        }
+
+        return -1;
+    }
+
+    private boolean isDistanceHigh() {
+
+        double distance = getLimelightDistance();
+
+        telemetry.addData(
+                "Limelight Distance",
+                "%.2f in",
+                distance
+        );
+
+        telemetry.update();
+
+        return distance < 18.5;
     }
 }

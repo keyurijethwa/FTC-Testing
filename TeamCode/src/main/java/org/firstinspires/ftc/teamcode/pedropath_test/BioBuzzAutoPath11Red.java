@@ -28,8 +28,8 @@ import org.firstinspires.ftc.teamcode.test_robot;
 
 import java.util.List;
 
-@Autonomous(name = "BioBuzzAutoPath7Red", group = "Autonomous")
-public class BioBuzzAutoPath7Red extends LinearOpMode {
+@Autonomous(name = "BioBuzzAutoPath11Red", group = "Autonomous")
+public class BioBuzzAutoPath11Red extends LinearOpMode {
 
     private Follower follower;
     private final PoseFactory poseFactory = PoseFactory.degrees();
@@ -42,8 +42,10 @@ public class BioBuzzAutoPath7Red extends LinearOpMode {
     private final Pose point4 = poseFactory.of(12.6459, 47.7531, 180);
     private final Pose point5Start = poseFactory.of(12.6459, 47.7531, 270);
     private final Pose point5 = poseFactory.of(57.6796, 39.8173, 270);
-    private final Pose point6 = poseFactory.of(12.5235, 115.5194, 270);
-    private final Pose point6Control1 = poseFactory.of(1.8802, 50.3368, 270);
+    private final Pose point6=poseFactory.of(13,13,270);
+    private final Pose point7=poseFactory.of(57.6796, 39.8173, 270);
+    private final Pose point8 = poseFactory.of(15.5235, 115.5194, 270);
+    private final Pose point8Control1 = poseFactory.of(4, 50.3368, 270);
 
     private test_robot tr;
     private Intake_Balls ib;
@@ -73,7 +75,16 @@ public class BioBuzzAutoPath7Red extends LinearOpMode {
                 parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
                 waitMs(3000),
                 parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
-                follow(follower,path6())
+                follow(follower,path6()),
+                instant(()->ib.in(0.8)),
+                waitMs(3000),
+                instant(()->ib.stop1()),
+                follow(follower,path7()),
+                parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
+                waitMs(3000),
+                parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
+                follow(follower,path8())
+
         );
     }
     @Override
@@ -119,9 +130,15 @@ public class BioBuzzAutoPath7Red extends LinearOpMode {
     public Path path5() {
         return line(point5Start, point5).linear(point5Start, point5);
     }
-
     public Path path6() {
-        return curve(point5,point6Control1, point6).linear(point5, point6);
+        return line(point5, point6).linear(point5, point6);
+    }
+    public Path path7() {
+        return line(point6, point7).linear(point6, point7);
+    }
+
+    public Path path8() {
+        return curve(point7,point8Control1, point8).linear(point7, point8);
     }
 
 
