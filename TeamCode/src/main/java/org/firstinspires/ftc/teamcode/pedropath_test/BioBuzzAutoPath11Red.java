@@ -57,31 +57,31 @@ public class BioBuzzAutoPath11Red extends LinearOpMode {
         return sequential(
                 follow(follower, path1()),
                 parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
-                waitMs(3000),
+                waitMs(2500),
                 parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower,path2()),
                 instant(()->ib.in(0.8)),
-                waitMs(3000),
+                waitMs(2500),
                 instant(()->ib.stop1()),
                 follow(follower,path3()),
                 parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
-                waitMs(3000),
+                waitMs(2500),
                 parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower,path4()),
                 instant(()->ib.in(0.8)),
-                waitMs(3000),
+                waitMs(2500),
                 instant(()->ib.stop1()),
                 follow(follower,path5()),
                 parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
-                waitMs(3000),
+                waitMs(2500),
                 parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower,path6()),
                 instant(()->ib.in(0.8)),
-                waitMs(3000),
+                waitMs(2500),
                 instant(()->ib.stop1()),
                 follow(follower,path7()),
                 parallel(instant(()->sb.forwardsh()),instant(()->ib.in(0.8))),
-                waitMs(3000),
+                waitMs(2500),
                 parallel(instant(()->sb.stopsh()),instant(()->ib.stop1())),
                 follow(follower,path8())
 
@@ -126,20 +126,18 @@ public class BioBuzzAutoPath11Red extends LinearOpMode {
     public Path path4() {
         return curve(point4Start,point4Control1, point4).linear(point4Start, point4);
     }
-
     public Path path5() {
         return line(point5Start, point5).linear(point5Start, point5);
     }
+
     public Path path6() {
         return line(point5, point6).linear(point5, point6);
     }
     public Path path7() {
         return line(point6, point7).linear(point6, point7);
     }
-
     public Path path8() {
         return curve(point7,point8Control1, point8).linear(point7, point8);
     }
-
 
 }

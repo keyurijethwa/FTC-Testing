@@ -19,6 +19,7 @@ import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
@@ -28,8 +29,8 @@ import org.firstinspires.ftc.teamcode.test_robot;
 
 import java.util.List;
 
-@Autonomous(name = "BioBuzzAutoRedDistanceLimelightTest", group = "Autonomous")
-public class BioBuzzAutoRedDistanceLimelightTest extends LinearOpMode {
+@Autonomous(name = "BioBuzzAutoPathRedWaitUntillTest", group = "Autonomous")
+public class BioBuzzAutoPathRedWaitUntillTest extends LinearOpMode {
 
     private Follower follower;
 
@@ -107,8 +108,12 @@ public class BioBuzzAutoRedDistanceLimelightTest extends LinearOpMode {
                 follow(follower, path1()),
                 instant(() -> {
                     rgbYellow();
-                    telemetry.addLine("CHECK DISTANCE");
+                    telemetry.addLine("Waiting for Limelight distance...");
                 }),
+
+
+                // Keep checking until the condition becomes true
+                waitUntil(() -> isDistanceHigh()),
 
                 conditional(
                         () -> isDistanceHigh(),
@@ -454,6 +459,6 @@ public class BioBuzzAutoRedDistanceLimelightTest extends LinearOpMode {
 
         telemetry.update();
 
-        return distance < 18.5;
+        return distance > 0 && distance < 18.5;
     }
 }
