@@ -25,8 +25,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Intake_Balls;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-@Autonomous(name = "BioBuzzAutoPathDistanceSensorTest", group = "Autonomous")
-public class BioBuzzAutoPathDistanceSensorTest extends LinearOpMode {
+@Autonomous(name = "AutoPathMidIntakeTest", group = "Autonomous")
+public class AutoPathMidIntakeTest extends LinearOpMode {
 
     private Follower follower;
 
@@ -46,12 +46,19 @@ public class BioBuzzAutoPathDistanceSensorTest extends LinearOpMode {
     // Autonomous routine
     public Command autoRoutine() {
         return sequential(
-                follow(follower, path1()),
-                waitMs(2000),
-                race(
-                        infinite(() -> ib.in(0.8)),
-                        waitUntil(this::getDistance)
+                parallel(
+                        follow(follower, path1()),
+
+                        sequential(
+                                waitUntil(() -> follower.completion() >= 0.5),
+                                instant(() -> ib.in(0.8))
+                        )
                 ),
+
+                // Stop intake after path 1, before continuing
+
+                waitMs(2000),
+                instant(() -> ib.in(0)),
                 follow(follower, path2())
 
         );
